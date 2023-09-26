@@ -1,0 +1,623 @@
+---
+documentclass: article 
+header-includes:
+- \usepackage[utf8]{inputenc} 
+- \usepackage[Lenny]{fncychap}
+- \usepackage{multirow}
+- \usepackage{float}
+- \usepackage{graphicx}
+- \usepackage{wrapfig}
+- \usepackage{enumerate}
+- \usepackage{graphicx}
+- \usepackage{float}
+- \usepackage{setspace}
+- \usepackage{amsmath}
+- \usepackage[lmargin = 2.54 cm, rmargin = 2.54 cm, top = 2.54 cm, bottom = 2.54 cm]{geometry}
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \usepackage{makeidx}
+- \renewcommand{\headrulewidth}{2pt}
+- \fancyhead[R]{Regresión Logística Multinomial}
+- \lfoot{\LaTeX}
+- \renewcommand{\headrulewidth}{0.00001cm}
+- \usepackage{booktabs}
+format: pdf 
+editor: visual 
+lang: es-ES
+---
+
+```{=tex}
+\begin{titlepage}
+\centering
+{\bfseries\LARGE UNIVERSIDAD DE EL SALVADOR}\\ 
+\vspace{0.5cm}
+{\bfseries\LARGE FACULTAD MULDISCIPLINARIA DE OCCIDENTE}\\
+\vspace{0.5cm}
+{\bfseries\LARGE DEPARTAMENTO DE MATEM\'ATICA\par}
+\vspace{0.5 cm}
+{\bfseries\LARGE LICENCIATURA EN ESTAD\'ISTICA\par}
+\vspace{1 cm}
+{\includegraphics[width=0.3\textwidth]{Minerva.jpg}\par}
+\vspace{0.9 cm}
+{\bfseries \LARGE APLICACI\'ON DE REGRESI\'ON LOG\'ISTICA MULTINOMIAL\par}
+\vspace{0.7 cm}
+{\bfseries\LARGE DOCENTE: \par}
+{\bfseries\LARGE Licdo. Jaime Isacc Peña \par}
+\vspace{0.7 cm}
+{\bfseries\Large C\'ATEDRA: Proyecto de Estudios Estadísticos \par}
+\vspace{0.7 cm}
+{\Large Autor: \par}
+{\Large Oscar Mauricio Rodr\'iguez Reyes \par}
+\vfill
+{\Large Santa Ana, 11 de Agosto de 2023 \par}
+\end{titlepage}
+```
+```{=tex}
+\tableofcontents
+\newpage
+```
+\section{Regresi\'on Log\'istica Multinomial}
+
+La regresión logística multinomial es un tipo de modelo de regresión utilizado para predecir una variable categórica con más de dos categorías. A diferencia de la regresión logística binomial, que se utiliza para predecir dos categorías, la regresión logística multinomial se utiliza cuando la variable dependiente tiene tres o más categorías discretas. Es una extensión de la regresión logística que permite modelar relaciones entre variables predictoras y una variable de respuesta categórica con múltiples niveles. Por ejemplo, puede usarse para predecir el tipo de persona de acuerdo a la preferenca alimenticia que han sido catalogadas como vegano, omnívoro y carnívoro.
+
+\subsection{Criterios a Considerar para Aplicar la Técnica}
+
+1.  Es recomendable que la variable dependiente sea nominal.
+2.  Las variables independientes o predictoras que se vayan a incluir en el modelo deben ser numéricas, si se dispone de variables categóricas, deben ser transformadas en variables indicadoras.
+3.  No debe haber presencia de multicolinealidad.
+4.  Debe haber linealidad entre la variable dependiente con las variables independientes.
+
+```{=tex}
+\subsection{Definici\'on de Conceptos B\'asicos}
+\subsubsection{Prueba de hip\'otesis de coeficientes}
+```
+En regresión logística, las hipótesis son de interés:
+
+La hipótesis nula, que es cuando todos los coeficientes de la ecuación de regresión toman el valor cero, y
+
+La hipótesis alternativa de que el modelo actualmente en consideración es preciso y difiere significativamente del nulo de cero, es decir, da significativamente mejor que el nivel de predicción aleatoria o aleatoria de la hipótesis nula.
+
+\subsubsection{Prueba de raz\'on de verosimilitud}
+
+La razón de verosimilitud es una estadística utilizada en la regresión logística multinomial para comparar dos modelos diferentes: el modelo nulo (sin variables predictoras) y el modelo con las variables predictoras. Se utiliza para evaluar si el modelo con las variables predictoras es significativamente mejor que el modelo nulo.
+
+La razón de verosimilitud se basa en la razón -2LL y ayuda a determinar si el conjunto de variables predictoras proporciona información útil para predecir la variable dependiente. Un valor alto de la razón de verosimilitud sugiere que el modelo con las variables predictoras es una mejora significativa sobre el modelo nulo.
+
+Las hipótesis a considerar son las siguientes
+
+-   \textbf{$H_{0}:$} No hay diferencia entre el modelo nulo y el modelo final.
+-   \textbf{$H_{1}:$} Hay diferencia entre el modelo nulo y el modelo final.
+
+\subsubsection{Supuesto L: multicolinealidad}
+
+Simplemente ejecute una "regresión lineal" después de asumir la variable dependiente categórica como variable continua.
+
+Si el VIF (factor de inflación de la varianza) más grande es mayor que 10, entonces hay un motivo de preocupación (Bowerman y O'Connell, 1990).
+
+-   La tolerancia por debajo de 0,1 indica un problema grave.
+
+-   La tolerancia por debajo de 0,2 indica un problema potencial (Menard, 1995).
+
+-   Si el índice de condición es mayor que 15, se asume la multicolinealidad.
+
+\subsubsection{Caracter\'isticas de la regresi\'on log\'istica multinomial}
+
+Regresión logística multinomial para predecir la pertenencia a más de dos categorías. (Básicamente) funciona de la misma manera que la regresión logística binaria. El análisis divide la variable de resultado en una serie de comparaciones entre dos categorías.
+
+Por ejemplo, si tiene tres categorías de resultados (A, B y C), el análisis consistirá en dos comparaciones que elija:
+
+-   Compare todo con su primera categoría (por ejemplo, A frente a B y A frente a C),
+
+-   O su última categoría (por ejemplo, A frente a C y B frente a C),
+
+-   O una categoría personalizada (por ejemplo, B frente a A y B frente a C). (Peña, 2021)
+
+\subsubsection{Odds Ratio}
+
+El Odds Ratio (OR) es una medida que compara las probabilidades de que un evento ocurra en dos grupos diferentes. En la regresión logística multinomial, se utilizan Odds Ratios para medir la relación entre las categorías de la variable dependiente y las variables predictoras. Ayuda a entender cómo la presencia o ausencia de una categoría en una variable dependiente está asociada con las variables predictoras. Un OR mayor que 1 indica que la probabilidad de una categoría es más alta en un grupo en comparación con otro, mientras que un OR menor que 1 indica lo contrario.
+
+\section{Aplicaci\'on de La T\'ecnica}
+
+La base de datos que se trabajará corresponde a información relacionada al rendimiento académico que los estudiantes del Instituto Nacional Cornelio Azenón Sierra llevan en la asignatura de Matemática.
+
+El objetivo es determinar si el tipo de ambiente familiar en que vive un alumno, la nota previa que este lleve en Matemática y su percepción de temas matemáticos explican el rendimiento que el alumno presenta en la asignatura de matemática; clasificado como rendimiento bajo, medio o alto.
+
+Las variables que contiene la base se describen a continuación:
+
+-   **Rendimiento:** Corresponde a la clasificación en que se encuentra el estudiante respecto a la nota promedio de matemática (niveles: 1 - bajo, 2 - medio y 3 - alto).
+
+-   **I9:** Ambiente familiar que el estudiante vive en su hogar (1 - agradable, 2 - autoritario y 3 - violento)
+
+-   **I17:** Nota promedio en matemática que el estudiante obtuvo en su año de estudio anterior.
+
+-   **I21:** Contiene las respuestas a la pregunta ¿Cómo considera que es su percepción para entender los contenidos matemáticos? (1 - Excelente, 2 - Muy Buena, 3 - Buena, 4 - Mala)
+
+\subsection{Aplicación del Método Usando el Software Estadístico SPSS}
+
+\subsubsection{Inspeci\'on de los datos}
+
+La base de datos cuenta con 106 observaciones, tal como se muestra en la siguente figura, consta de 4 variables dónde solo una es numérica mientras que el resto son categóricas, además, no tiene presencia de datos clasificados como *missing.*
+
+```{=tex}
+\begin{figure}[h]
+  \centering
+  {\includegraphics[width=0.5\textwidth]{images/qmd1-01.png}\par}
+  \caption{Inspección de la Base de Datos}
+  \label{fig:F1}
+\end{figure}
+```
+\subsubsection{Selecci\'on del modelo}
+
+Para la aplicación de la técnica en este software se debe seguir la siguiente secuencia: *Analizar\>Regresión\>Logística Multinomial.* Luego se abre la ventana que se muestra en la Figura 2; en esta se debe agregar la variable dependiente junto a la categoría de referencia en este caso es Rendimiento Medio (2); en el área de factores se deben agregar las variables independientes categóricas nominales y en la parte de covariables se agregan las variables independientes numéricas.
+
+```{=tex}
+\begin{figure}[htb]
+  \centering
+  {\includegraphics[width=0.45\textwidth]{images/qmd2-01.png}\par}
+  \caption{Selección de las variables en el modelo}
+  \label{fig:F2}
+\end{figure}
+```
+Para el presente caso, se trabajará un modelo que considera solo los efectos principales de las variables. Ahora lo que sigue es la interpretación de los resultados.
+
+\subsubsection{Comprobacio\'on de Multicolinealidad}
+
+De acuerdo a la figura 3, se observa que el valor de VIF para cada variable predictora es menor que 10, por tanto se concluye que no hay multicolinealidad.
+
+```{=tex}
+\begin{figure}[h]
+  \centering
+  {\includegraphics[width=0.5\textwidth]{images/VIF.png}\par}
+  \caption{Prueba de Multicolinealidad}
+  \label{fig:F3}
+\end{figure}
+```
+\subsubsection{Ajuste del Modelo}
+
+En la figura 4 se muestra una tabla que contiene el ajuste del modelo seleccionado, con base al criterio AIC es evidente que el agregar variables se explica de mejor manera la variabilidad de los datos de la variable dependiente que el modelo que contiene solo la constante. Lo expuesto también se puede verificar con base al p valor que se muestra en la última columna, pues este es menor que 0.05 lo cual indica que el modelo final se ajusta significativamente mejor que el modelo sin predictores.
+
+```{=tex}
+\begin{figure}[htb]
+  \centering
+  {\includegraphics[width=1\textwidth]{images/qmd3.png}\par}
+  \caption{Información del Ajuste del Modelo}
+  \label{fig:F4}
+\end{figure}
+```
+En la figura 5 se muestra una prueba de bondad de ajuste en el cual se busca que el p valor que se encuentra en la última columna sea mayor que 0.05. Con base a la desvianza, se obtiene un p valor prácticamente de 1, por tanto, esto implica que los valores predichos mediante el modelo no difieren significativamente de los valores observados. Por tanto, existe un buen ajuste del modelo.
+
+```{=tex}
+\begin{figure}[htb]
+  \centering
+  {\includegraphics[width=0.8\textwidth]{images/qmd4.png}\par}
+  \caption{Bondad de Ajuste}
+  \label{fig:F5}
+\end{figure}
+```
+\subsubsection{Pseudo R-Cuadrado}
+
+En la figura 6, con base al valor que se presenta en el índice de corrección de Nagelkerke, se concluye que existe una fuerte relación del 86.5 % entre los predictores y la predicción, es decir, el ambiente familiar, la nota promedio de Matemática en años previos y la percepción de los contenidos matemáticos están relacionados en un 86.5% con el rendimiento académico que un alumno presente en la asignatura de Matemática.
+
+```{=tex}
+\begin{figure}[htb]
+  \centering
+  {\includegraphics[width=0.8\textwidth]{images/qmd5.png}\par}
+  \caption{Pseudo R-Cuadrado}
+  \label{fig:F6}
+\end{figure}
+```
+\subsubsection{Raz\'on de Verosimilitud por variable}
+
+Es necesario verificar si las variables incluidas al modelo, son significativas para este. Con base a las pruebas de razón de verosimilitud que se muestran en la figura 7, teniendo como referencia la última columna, se concluye que tanto la nota previa, el ambiente familiar y la percepción de temas matemáticos aportan información significativa al modelo dado que los p valores que se obtuvieron para estas es menor que 0.05.
+
+```{=tex}
+\begin{figure}[htb]
+  \centering
+  {\includegraphics[width=0.8\textwidth]{images/qmd6.png}\par}
+  \caption{Razón de Verosimilitud para las variables}
+  \label{fig:F7}
+\end{figure}
+```
+\subsubsection{Par\'ametros del modelo}
+
+En la figura 8 y 9 se muestran los valores correspondientes a los $\beta$, Wald, significancia estadística y los Old ratio (Exp(B)) de cada variable. En este caso se busca que los valores de Wald no sean cero y que el p valor sea menor a 0.05 para que el predictor haga un aporte significativo a la variable dependiente que en este caso es el Rendimiento Académico en Matemática
+
+En la relación de Rendimiento Bajo con Rendimiento medio, se ha obtenido que la nota previa es un predictor significativo. El valor de $\beta$ que le corresponde es de -1.273, Wald de 5.186 y Old Ratio de 0.280 (Exp(B)) , dado que el valor de $\beta$ es negativo, implica que a medida que el promedio en Matemática aumenta en una unidad, existe una razón de probabilidad de 0.28 de pertenecer a un grupo de rendimiento bajo. En otras palabras, entre mayor sea el promedio en matemática es menos probable que tengamos un rendimiento bajo.
+
+```{=tex}
+\begin{figure}[htb]
+  \centering
+  {\includegraphics[width=0.8\textwidth]{images/qmd7.png}\par}
+  \caption{Estimaciones de los Parámetros (Rendimiento Bajo con Rendimiento Medio)}
+  \label{fig:F8}
+\end{figure}
+```
+En la relación de Rendimiento Medio con Rendimiento Alto (Figura 8), se ha obtenido que el ambiente familiar agradable (1) es un predictor significativo. El valor de $\beta$ que le corresponde es de -19.805, Wald de 97.563 y Old Ratio de $2.504E-9$ (Exp(B)) , dado que el valor de $\beta$ es negativo, significa que si el ambiente familiar en que vive el alumno cambia a un ambiente que no sea agradable, existe una razón de probabilidad de $2.504E-9$ de pertenecer a un grupo de rendimiento Alto. En otras palabras, si el ambiente familiar en que vive el alumno es agradable, es bastante probable que este presente un rendimiento académico alto.
+
+```{=tex}
+\begin{figure}[htb]
+  \centering
+  {\includegraphics[width=0.8\textwidth]{images/qmd8.png}\par}
+  \caption{Estimaciones de los Parámetros (Rendimiento Medio con Rendimiento Alto)}
+  \label{fig:F9}
+\end{figure}
+```
+\subsubsection{Precisi\'on de aciertos del modelo}
+
+Finalmente, en la figura 10 se presenta una tabla resumen de la precisión del modelo. Se observa que se clasificó correctamente el 91.5% de los datos.
+
+```{=tex}
+\begin{figure}[htb]
+  \centering
+  {\includegraphics[width=0.9\textwidth]{images/qmd9.png}\par}
+  \caption{Resumen de Clasificación}
+  \label{fig:F10}
+\end{figure}
+```
+En los siguientes 2 capítulos se aplicará siempre una Regresión Logística Multinomial a la misma base de datos con la diferencia que en este caso se usará el Software Estadístico R y el lenguaje de programación de Python. \newpage
+
+\subsection{Aplicaci\'on del M\'etodo Usando el Software Estad\'istico R}
+
+\subsubsection{Librer\'ias}
+
+Las librerías utilizadas para este caso son:
+
+```{r, message=FALSE, warning=FALSE}
+# Tratamiento de datos
+library(foreign)
+library(jmv)
+library(summarytools)
+library(gmodels)
+
+# Modelado y Ajuste
+library(nnet)
+library(DescTools)
+library(lmtest)
+
+# Gráficos
+library(ggplot2)
+```
+
+\subsubsection{Datos}
+
+Se importa la base de datos que se encuentra en el directorio de trabajo y se guarda en un objeto que se llamará $RendimientoAcademico$, luego se crea una copia de estos datos.
+
+```{r}
+RendimientoAcademico <- read.spss("RendAcad_Seminario.sav")
+RendAcad <- as.data.frame(RendimientoAcademico)
+```
+
+\subsubsection{Exploraci\'on de la base de datos}
+
+```{r}
+head(RendAcad)
+```
+
+Se muestra un resumen con medidas estadísticas de las variables, recordando que solo la variable $I17$ es numérica, la cual corresponde a la nota previa en la asignatura de matemática. Se observa que se tiene una nota previa promedio de 7.79
+
+```{r}
+summary(RendAcad)
+```
+
+Otra forma de tener un análisis descriptivo de las variables es de la siguiente manera
+
+```{r, message=FALSE, warning=FALSE}
+descriptives(RendAcad, freq = T)
+```
+
+Tabla de contingencia para la variable dependiente (Rendimiento) y la variable independiente I9 (Ambiente Familiar)
+
+```{r}
+CrossTable(RendAcad$I9, RendAcad$Rendimiento)
+```
+
+Tabla de contingencia para la variable dependiente (Rendimiento) y la variable independiente I21 (Percepción de temas matemáticos)
+
+```{r}
+CrossTable(RendAcad$I21, RendAcad$Rendimiento)
+```
+
+Gráfico de Cajas y Bigotes para el rendimiento y la nota previa en matemática (I17)
+
+```{r, fig=T, fig.cap="\\label{fig:bp}Gráfico de cajas y bigotes para el Rendimiento y Nota Previa"}
+ggplot(RendAcad, aes(x = Rendimiento, y = I17, fill=Rendimiento)) + 
+  geom_boxplot() + labs(x='Rendimiento', y='Nota Previa en Matemática') +
+  theme_bw() + theme(legend.position = "none")
+```
+
+Gráfico de Cajas y Bigotes para la nota previa en matemática (I17)
+
+```{r, fig=T, fig.cap="\\label{fig:cb}Gráfico de cajas y bigotes para la Nota Previa"}
+ggplot(RendAcad, aes(y = I17)) + 
+  geom_boxplot(fill = 'orange') + labs(y='Nota Previa en Matemática') +
+  theme_bw()
+```
+
+\subsubsection{Preparaci\'on de los datos}
+
+Dado que solo una variable es numérica, es necesario que las variables categóricas sean transformadas en nuevas variables indicadoras. Dado que se trabajará con el Rendimiento Medio como referencia, es necesario la variable dependiente sea recodificada.
+
+```{r, message=FALSE, warning=FALSE}
+# Recodificar (2 - Medio)
+RendAcad$Rendimiento <- relevel(as.factor(RendAcad$Rendimiento), ref = 2)
+
+# Creando variables indicadoras
+RendAcad$I9 <-  relevel(as.factor(RendAcad$I9), ref = 2)
+RendAcad$I21 <- relevel(as.factor(RendAcad$I21), ref = 3)
+
+# Asignar etiquetas
+levels(RendAcad$Rendimiento) <- c("Medio", "Bajo", "Alto")
+levels(RendAcad$I9) <- c("Autoritario","Agradable", "Violento")
+levels(RendAcad$I21) <- c("Buena", "Excelente", "Muy Buena", "Mala")
+```
+
+\subsubsection{Ajuste del Modelo}
+
+Se crea un modelo sin predictores para posteriormente realizar comparaciones
+
+```{r, message=FALSE, warning=FALSE}
+ModIni <- multinom(Rendimiento ~ 1, data = RendAcad)
+summary(ModIni)
+```
+
+Se crea el modelo de interés con los predictores
+
+```{r, message=FALSE, warning=FALSE}
+ModFin <- multinom(Rendimiento ~ I9 + I17 + I21, data = RendAcad, model = T)
+summary(ModFin)
+```
+
+```{r, message=FALSE, warning=FALSE}
+anova(ModIni, ModFin)
+```
+
+En el modelo sin predictores se obtuvo un valor para AIC de 189.64 mientras que para el modelo con predictores un valor de 80.54 esto indica que es mejor el modelo con los predictores que sin ellos. Esto también se verifica en la prueba de razón de verosimilitud chi-cuadrado porque se obtuvo un valor de 133.10 con un p valor menor que 0.05.
+
+Ahora bien, se sabe que resultó más significativo el modelo con los predictores. Lo que sigue es analizar este modelo.
+
+Con la siguiente prueba de bondad de ajuste Chi Cuadrado, como el p_valor obtenido es menor que 0.05, existe evidencia estadística para concluir que los valores predichos no difieren significativamente de los reales.
+
+```{r, message=FALSE, warning=FALSE}
+# Prueba de bondad de ajuste
+chisq.test(RendAcad$Rendimiento,predict(ModFin))
+```
+
+\subsubsection{Pseudo R-Cuadrado}
+
+```{r, message=FALSE, warning=FALSE}
+PseudoR2(ModFin, which = c ("CoxSnell", "Nagelkerke", "McFadden"))
+```
+
+Con base al valor que se presenta en el índice de corrección de Nagelkerke, se concluye que existe una fuerte relación del 86.5 % entre los predictores y la predicción.
+
+\subsubsection{Pruebas de raz\'on de verosimilitud por variable}
+
+```{r, message=FALSE, warning=FALSE}
+lrtest(ModFin, "I9")
+```
+
+En el nivel de significancia del 0.05, dado que se obtuvo un p valor de 0.01 se concluye que la variable $I9$ aporta información significativa para el modelo.
+
+```{r, message=FALSE, warning=FALSE}
+lrtest(ModFin, "I17")
+```
+
+En el nivel de significancia del 0.05, dado que se obtuvo un p valor de 0.002 se concluye que la variable $I17$ aporta información significativa para el modelo.
+
+```{r, message=FALSE, warning=FALSE}
+lrtest(ModFin, "I21")
+```
+
+En el nivel de significancia del 0.05, dado que se obtuvo un p valor de $1.15e-14$ se concluye que la variable $I21$ aporta información significativa para el modelo.
+
+\subsubsection{Estimaci\'on de Par\'ametros}
+
+```{r}
+summary(ModFin)
+```
+
+```{r, message=FALSE, warning=FALSE}
+# Valor Z asociado a Wald
+z <- summary(ModFin)$coefficients/summary(ModFin)$standard.errors
+z
+```
+
+```{r, message=FALSE, warning=FALSE}
+# Prueba de 2 colas
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+p
+```
+
+Es de recordar que en este caso se trabajó con el Rendimiento Medio como categoría de referencia, por tal motivo los resultados devuelven 2 filas; en la primera relaciona Rendimiento Bajo con Rendimiento Medio y en la segunda Rendimiento Medio con Rendimiento Alto. Por otro lado, en la prueba de 2 colas $(p)$, se observa que la variable I17 $(Nota \ Previa)$ es significativa $(p valor = 0.02)$ para clasificar entre Rendimiento Bajo y Rendimiento Medio; de igual manera, el ambiente familiar violento $(I9Violento)$ es significativa $(p valor < 0.05)$ para clasificar entre Rendimiento Medio y Rendimiento Alto. Con respecto a la variable I9Violento, esta corresponde a una variable indicadora dónde el valor de 1 significa que hay un ambiente familiar violento y el 0 en otro caso.
+
+```{r}
+# Risk Ratio
+round(exp(coef(ModFin)), 2)
+```
+
+\subsubsection{Resultados de Clasificaci\'on}
+
+Puede observarse que se obtuvieron los mismos resultados de clasificación que en SPSS
+
+```{r}
+table(RendAcad$Rendimiento, predict(ModFin))
+```
+
+\subsubsection{Predicci\'on de casos}
+
+Por ejemplo, suponer que hay dos estudiantes y las respuestas que dieron para las preguntas correspondientes a las variables predictoras son las siguientes:
+
+Estudiante 1. - Nota Previa en Matemática: 9 - Ambiente Familiar: Agradable - Percepción de Temas Matemáticos: Excelente
+
+Estudiante 2. - Nota Previa en Matemática: 6 - Ambiente Familiar: Autoritario - Percepción de Temas Matemáticos: Muy Buena
+
+```{r}
+caso = data.frame(I9 =  factor(c("Agradable", "Autoritario"), 
+                               levels = levels(RendAcad$I9)),
+                  I17  = c(9, 6),
+                  I21 = factor(c("Excelente", "Muy Buena"), 
+                               levels = levels(RendAcad$I21)))
+prediccion <- data.frame(t(predict(ModFin, newdata = caso, "probs")))
+
+round(prediccion, 2)
+
+```
+
+Puede apreciarse que, para el estudiante 1 se predice un rendimiento alto mientras que para el estudiante 2 se predice un rendimiento medio.
+
+\subsection{Aplicaci\'on del M\'etodo Usando el Lenguaje de Programaci\'on Python}
+
+\subsubsection{Librer\'ias}
+
+```{python}
+# Tratamiento de datos
+import pandas as pd
+import pyreadstat as pr
+import numpy as np
+
+# Procesado y modelado de datos
+from sklearn.metrics import accuracy_score
+import statsmodels.api as sm
+
+# Gráficos
+import matplotlib.pyplot as plt
+import seaborn as sns
+from plotnine import *
+
+# Configuración warnings
+import warnings
+warnings.filterwarnings('ignore')
+```
+
+\subsubsection{Datos}
+
+```{python}
+# Leer los datos
+data = pd.read_spss('RendAcad_Seminario.sav')
+```
+
+\subsubsection{Explorci\'on de los datos}
+
+Inspección de los datos
+
+```{python}
+data.head()
+```
+
+Tipo de variables
+
+```{python}
+data.dtypes
+```
+
+Frecuencia de los datos
+
+```{python}
+# Rendimiento
+print(data.Rendimiento.value_counts(), '\n')
+
+# Ambiente Familiar
+print(data.I9.value_counts(), '\n')
+
+# Nota Previa
+print('Descriptivos de la Nota Previa\n',data.I17.describe(), '\n')
+
+# Percepción de Temas Matemáticos
+print(data.I21.value_counts(), '\n')
+
+# Tabla cruzada
+data[['Rendimiento', 'I17']].groupby('Rendimiento').mean()
+```
+
+Con la siguientes líneas de código se crea un gráfico similar al de la figura 11.
+
+```{python}
+#plt.figure(figsize= (6,6))
+#sns.boxplot(data= data, x= 'Rendimiento',y = 'I17')
+#plt.ylabel('Rendimiento Previo en Matemática')
+#plt.show()
+```
+
+\subsubsection{Preparaci\'on de los datos}
+
+Seleccionar y recodificar la variable dependiente de acuerdo a la categoría de referencia (Rendimiento Medio)
+
+```{python}
+y = data['Rendimiento'].astype('category').cat.reorder_categories(['Medio', 'Bajo',
+'Alto'], ordered=True)
+```
+
+Seleccionar las variables predictoras categóricas y transformarlas en variables indicadoras, luego crear un solo conjunto de variables predictoras.
+
+```{python}
+recod = pd.get_dummies(data.drop(['Rendimiento', 'I17'], axis = 1), drop_first = False)
+recod = recod.drop(['I9_Violento', 'I21_Mala'], axis = 1)
+recod = pd.DataFrame(np.where(recod ,1,0), columns = recod.columns)
+
+x = pd.concat((data['I17'], recod), axis = 1)
+```
+
+\subsubsection{Ajuste del Modelo}
+
+Se debe añadir un vector de constantes al conjunto de variables predictoras para el intercepto del modelo.
+
+```{python}
+Modelo = sm.MNLogit(y, sm.add_constant(x))
+Resultado = Modelo.fit()
+```
+
+\subsubsection{Par\'ametros Estimados}
+
+Se muestran los resultados del modelo
+
+```{python}
+print(Resultado.summary(), '\n')
+print(Resultado.summary2())
+```
+
+Risk Ratio
+
+```{python}
+ratio = pd.DataFrame({"Bajo": np.exp(Resultado.params[0]),
+                      "Alto": np.exp(Resultado.params[1])})
+print(np.round(ratio, decimals = 2))
+```
+
+\subsubsection{Resultado de Clasificaci\'on}
+
+```{python}
+Clasificacion = pd.DataFrame(Resultado.pred_table(), columns = ['Medio', 'Bajo', 'Alto'],
+                index = ['Medio', 'Bajo', 'Alto'], dtype = np.int8)
+print(Clasificacion)
+```
+
+Se observa que la clasificación final de los casos, ha sido la misma en los 3 software.
+
+\subsubsection{Predicci\'on de casos}
+
+Por ejemplo, suponer que hay dos estudiantes y las respuestas que dieron para las preguntas correspondientes a las variables predictoras son las siguientes:
+
+Estudiante 1. - Nota Previa en Matemática: 9 - Ambiente Familiar: Agradable - Percepción de Temas Matemáticos: Mala
+
+Estudiante 2. - Nota Previa en Matemática: 6 - Ambiente Familiar: Autoritario - Percepción de Temas Matemáticos: Muy Buena
+
+```{python}
+caso = pd.DataFrame({'I17': [9, 6],
+                    'I9_Agradable': [1, 0],
+                    'I9_Autoritario': [0, 1],
+                    'I21_Buena': [0, 0],
+                    'I21_Excelente': [0, 0],
+                    'I21_Muy Buena': [0, 1]})
+
+prediccion = np.argmax(Resultado.predict(sm.add_constant(caso)), axis=1)
+
+categoria = ['Bajo', 'Alto', 'Medio']
+predic = [categoria[i] for i in prediccion]
+predic
+```
+
+Con base al resultado, se observa que, para el estudiante 1 se predice que tendrá un rendimiento alto, mientras que para el estudiante 2, será un rendimiento bajo.
+
+\section{Colnclusi\'on}
+
+La replicación de los resultados en diferentes software aumenta la replicabilidad del estudio. El hecho de que SPSS, R y Python hayan producido resultados similares al aplicar la regresión logística multinomial sugiere que el modelo es robusto y confiable. La consistencia entre los resultados en diferentes software confirma que el modelo de regresión logística multinomial utilizado es apropiado para analizar el rendimiento académico y que las variables predictoras seleccionadas son relevantes para hacer predicciones precisas.
